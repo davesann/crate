@@ -22,7 +22,11 @@
            (dom-attr elem k v))
          elem))))
   ([elem k v]
-   (. elem (setAttribute (name k) (if (keyword? v) (name v) v)))
+   (. elem (setAttribute (name k) 
+                         (cond 
+                           (keyword? v) (name v) 
+                           (or (string? v) (number? v)) v
+                           :else (pr-str v))))
    elem))
 
 (defn as-content [parent content]
