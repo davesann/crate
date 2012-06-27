@@ -70,7 +70,7 @@
                 (dom-style elem k v))
      (bind/binding? v) (do
                          (capture-binding :attr [:style v])
-                         (dom-style (bind/value v))))
+                         (dom-style elem (bind/value v))))
    elem)
   ([elem k v]
    (let [v (if (bind/binding? v)
@@ -97,7 +97,11 @@
                  (capture-binding :attr [k v])
                  (bind/value v))
                v)]
-       (. elem (setAttribute (name k) v))))
+       (. elem (setAttribute (name k) 
+                             (cond 
+                               (keyword? v) (name v) 
+                               (or (string? v) (number? v)) v
+                               :else (pr-str v))))))
    elem))
 
 (defn as-content [parent content]
